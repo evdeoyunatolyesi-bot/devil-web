@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>DEVIL CHATS — Anonymous Chat</title>
+  <style>
+    :root{color-scheme:dark;--bg:#070d1b;--panel:#101a2d;--line:#2c4162;--text:#eef5ff;--muted:#91a5c5;--blue:#28a9ff;--red:#ff315d}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;color:var(--text);background:radial-gradient(ellipse at 12% 5%,#102d55 0,transparent 36%),radial-gradient(ellipse at 90% 18%,#4a1029 0,transparent 32%),linear-gradient(145deg,#070d1b,#0a1021 52%,#120b20);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;justify-content:center;padding:28px 14px}
+    .shell{width:100%;max-width:690px;perspective:1200px}
+    .brand{display:flex;align-items:center;gap:14px;margin:0 2px 25px}
+    .logo{width:49px;height:49px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(145deg,#51c4ff,#0878e8 48%,#ff315d 105%);color:#fff;font-size:25px;font-weight:900;box-shadow:inset 0 2px 2px #ffffff80,0 8px 22px #0878e855;transform:rotate(-5deg)}
+    .brand h1{margin:0;font-size:21px;letter-spacing:1.5px;text-shadow:0 2px 16px #269dff55}
+    .brand p{margin:4px 0 0;color:var(--muted);font-size:12px}
+    .tag{margin-left:auto;border:1px solid #345a80;border-radius:20px;padding:7px 10px;color:#a9dfff;background:#102441aa;font-size:9px;letter-spacing:1.3px;font-weight:800;box-shadow:inset 0 1px #ffffff0c}
+    .card{position:relative;border:1px solid #314765;background:linear-gradient(145deg,#14233bdc,#0d1729ed 55%,#1a1229e8);border-radius:24px;box-shadow:0 26px 65px #0008,inset 0 1px 0 #ffffff14, inset 0 -1px 0 #ff315d12;overflow:hidden;padding:29px;transform:translateZ(0)}
+    .card:before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,transparent,var(--blue),#a6dfff,var(--red),transparent);opacity:.9}
+    .eyebrow{color:#79caff;font-size:10px;font-weight:850;letter-spacing:2px;text-transform:uppercase}
+    h2{margin:10px 0 8px;font-size:26px;letter-spacing:-.7px}
+    .muted{color:var(--muted);font-size:13px;line-height:1.65;margin:0 0 23px}
+    label{display:block;font-size:12px;font-weight:750;margin:16px 0 8px;color:#dceaff}
+    input{width:100%;background:linear-gradient(180deg,#071225,#0b172b);border:1px solid #2b4364;border-radius:12px;padding:14px 13px;color:var(--text);outline:none;font:inherit;font-size:14px;box-shadow:inset 0 3px 9px #0005;transition:border-color .2s,box-shadow .2s}
+    input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #28a9ff1b,inset 0 3px 9px #0005}
+    input::placeholder{color:#6d83a5}
+    button{border:0;border-radius:12px;cursor:pointer;font:inherit;font-weight:800;transition:transform .18s,filter .18s,box-shadow .18s}
+    button:hover{filter:brightness(1.08);transform:translateY(-2px)}
+    button:focus-visible{outline:2px solid #8ad5ff;outline-offset:3px}
+    #joinBtn{width:100%;min-height:48px;padding:14px;margin-top:20px;background:linear-gradient(110deg,#168fe8 0%,#2878f6 48%,#f52d59 100%);color:white;font-size:13px;letter-spacing:.3px;box-shadow:0 8px 0 #08152c,0 13px 24px #146bd64d,inset 0 1px 0 #ffffff7d;text-shadow:0 1px 2px #0005}
+    #joinBtn:active{transform:translateY(3px);box-shadow:0 4px 0 #08152c,0 7px 14px #146bd644}
+    .hint{color:#8499ba;font-size:11px;line-height:1.6}
+    .error{color:#ff9bad;font-size:12px;min-height:18px}
+    .hidden{display:none!important}
+    .head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .secondary{background:linear-gradient(145deg,#1d3555,#14243d);border:1px solid #3c5879;color:#d6e9ff;padding:10px 14px;font-size:12px;box-shadow:0 4px 0 #080f1e,inset 0 1px #ffffff18}
+    .status{display:flex;align-items:center;gap:9px;margin:17px 0 13px;padding:11px 12px;background:linear-gradient(100deg,#0a2034,#1b1329);border:1px solid #273e5d;border-radius:11px;color:#b7c9e5;font-size:11px}
+    .status:before{content:"";width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:#28a9ff;box-shadow:0 0 12px #28a9ff;animation:pulse 1.7s infinite}
+    .presence{margin:13px 0 15px;padding:14px;border:1px solid #2b4568;border-radius:15px;background:linear-gradient(135deg,#0a1c31,#201426);box-shadow:inset 0 1px #ffffff0b,0 8px 20px #0002}.presenceTop{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:11px}.presenceTitle{font-size:11px;font-weight:900;letter-spacing:1.2px;color:#d9ebff}.counts{display:flex;gap:7px;flex-wrap:wrap}.pill{font-size:10px;padding:6px 9px;border-radius:999px;border:1px solid #34516f;background:#10233a;color:#c9e3ff}.pill.online{border-color:#1f785d;color:#86ffd0;background:#0c3029}.memberList{display:grid;gap:8px}.member{display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid #253d59;border-radius:11px;background:#0a1526a8}.memberAvatar{width:29px;height:29px;flex:0 0 29px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(145deg,#168fe8,#ff315d);font-size:12px;font-weight:900}.memberInfo{flex:1;min-width:0}.memberName{font-size:12px;font-weight:800;overflow-wrap:anywhere}.memberSeen{font-size:10px;color:#91a5c5;margin-top:3px}.dot{width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:#71819a}.dot.isOnline{background:#3df0a9;box-shadow:0 0 10px #3df0a9}.emptyMembers{font-size:11px;color:#8297b8;padding:6px 0}.messages{height:340px;overflow:auto;padding:17px 2px;border-top:1px solid #293d59;border-bottom:1px solid #293d59;scroll-behavior:smooth}
+    .msg{margin:0 0 14px;animation:rise .22s ease-out}
+    .meta{font-size:10px;color:#9bb0d0;margin:0 0 6px 3px;display:flex;align-items:center;gap:7px}
+    .avatar{width:22px;height:22px;border-radius:8px;display:inline-grid;place-items:center;font-weight:900;color:#fff;background:linear-gradient(145deg,#168fe8,#ff315d);box-shadow:0 3px 9px #0005}
+    .bubble{display:inline-block;max-width:92%;white-space:pre-wrap;overflow-wrap:anywhere;background:linear-gradient(135deg,#173c60,#1a2944 72%);border:1px solid #2c5d86;border-radius:4px 15px 15px 15px;padding:11px 13px;font-size:13px;line-height:1.55;box-shadow:0 5px 14px #0003,inset 0 1px #ffffff0d}
+    .msg.mine .meta{justify-content:flex-end}
+    .msg.mine .bubble{background:linear-gradient(125deg,#263f7e,#63243f);border-color:#76435e;border-radius:15px 4px 15px 15px}
+    .system{margin:13px auto 17px;max-width:95%;text-align:center;color:#b7d9ff;font-size:11px;border:1px solid #2c5376;background:linear-gradient(90deg,#0e2741,#24162d);padding:9px 12px;border-radius:999px;box-shadow:inset 0 1px #ffffff0c;animation:rise .25s ease-out}
+    .composer{display:flex;gap:10px;padding-top:16px}
+    .composer input{flex:1;min-width:0}
+    .composer button{background:linear-gradient(110deg,#168fe8,#2878f6 48%,#f52d59);color:white;padding:0 17px;min-height:48px;box-shadow:0 5px 0 #08152c,0 8px 17px #146bd633,inset 0 1px #ffffff70}
+    .composer button:active{transform:translateY(3px);box-shadow:0 2px 0 #08152c}
+    .note{font-size:10px;color:#8297b8;text-align:center;line-height:1.6;margin:14px 0 0}
+    footer{text-align:center;color:#7185a6;font-size:10px;margin:22px 0}
+    @keyframes pulse{50%{opacity:.45;box-shadow:0 0 4px #28a9ff}}
+    @keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+    @media(max-width:460px){body{padding:20px 12px}.card{padding:22px 17px}.tag{font-size:8px;padding:6px}.messages{height:48vh;min-height:270px}h2{font-size:22px}.composer button{padding:0 13px}}
+  </style>
+</head>
+<body>
+<main class="shell">
+  <header class="brand"><div class="logo">☠</div><div><h1>DEVIL CHATS</h1><p>Two strangers. One secret passphrase.</p></div><span class="tag">ANONYMOUS</span></header>
+  <section id="joinCard" class="card">
+    <div class="eyebrow">ENTER THE SHADOW ROOM</div><h2>Start a private chat</h2>
+    <p class="muted">Choose any username. Use the same passphrase as the person you want to connect with.</p>
+    <form id="joinForm">
+      <label for="username">Your username</label><input id="username" maxlength="24" placeholder="Your name" required>
+      <label for="password">Shared passphrase</label><input id="password" type="password" minlength="8" maxlength="128" placeholder="At least 8 characters" required>
+      <p class="hint">Usernames may be different. The exact same passphrase matches the room. Never use your real account password.</p>
+      <button id="joinBtn" type="submit">Enter DEVIL CHATS →</button><p id="joinError" class="error" role="alert"></p>
+    </form>
+  </section>
+  <section id="chatCard" class="card hidden">
+    <div class="head"><div><div class="eyebrow">YOUR SECRET ROOM</div><h2 id="chatTitle">DEVIL CHATS</h2></div><button id="leaveBtn" class="secondary">Leave</button></div>
+    <div id="status" class="status">Connecting…</div><section class="presence" aria-label="Room members"><div class="presenceTop"><span class="presenceTitle">ROOM ACTIVITY</span><div class="counts"><span id="onlineCount" class="pill online">● 0 online</span><span id="joinedCount" class="pill">0 joined</span></div></div><div id="memberList" class="memberList"><div class="emptyMembers">Loading room members…</div></div></section><div id="messages" class="messages" aria-live="polite"></div>
+    <form id="sendForm" class="composer"><input id="message" maxlength="2000" placeholder="Write a message…" required><button type="submit">Send ↑</button></form>
+    <p class="note">Presence shows online users and last seen. Demo storage is temporary on Vercel serverless; for reliable cross-device status and chat, connect a shared database/realtime service.</p>
+  </section>
+  <footer>DEVIL CHATS · Private conversations, no public profiles</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let username="",password="",token="",joined=false,lastSignature="",pollTimer=null,presenceTimer=null,heartbeatTimer=null;
+$("joinForm").addEventListener("submit",async e=>{
+  e.preventDefault();$("joinError").textContent="";$("joinBtn").disabled=true;
+  username=$("username").value.trim();password=$("password").value;
+  try{
+    const r=await fetch("/api/join",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,password})});
+    const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||"Could not join.");
+    joined=true;token=d.token;$("chatTitle").textContent="DEVIL CHATS · "+username;$("joinCard").classList.add("hidden");$("chatCard").classList.remove("hidden");
+    $("password").value="";
+    $("status").textContent="You joined as "+username+". Checking who is online…";
+    addSystemMessage("🔥 "+username+" entered the chat");
+    await Promise.all([loadMessages(),loadPresence()]);
+    pollTimer=setInterval(loadMessages,1800);presenceTimer=setInterval(loadPresence,3500);heartbeatTimer=setInterval(sendHeartbeat,5000);
+    window.addEventListener("beforeunload",leaveBeacon);
+  }catch(err){$("joinError").textContent=err.message||"Connection failed."}
+  finally{$("joinBtn").disabled=false}
+});
+async function sendHeartbeat(){
+  if(!joined)return;
+  try{await fetch("/api/heartbeat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,password,token})})}catch(_){}
+}
+async function loadPresence(){
+  if(!joined)return;
+  try{
+    const r=await fetch("/api/status?password="+encodeURIComponent(password),{cache:"no-store"});const d=await r.json();
+    if(!r.ok||!d.ok)return;
+    $("onlineCount").textContent="● "+d.online_count+" online";
+    $("joinedCount").textContent=d.joined_count+" joined";
+    const list=$("memberList");list.replaceChildren();
+    if(!d.members.length){list.innerHTML='<div class="emptyMembers">No members recorded yet.</div>';return}
+    for(const m of d.members){
+      const row=document.createElement("div");row.className="member";
+      const avatar=document.createElement("div");avatar.className="memberAvatar";avatar.textContent=(m.username||"?").slice(0,1).toUpperCase();
+      const info=document.createElement("div");info.className="memberInfo";
+      const name=document.createElement("div");name.className="memberName";name.textContent=m.username+(m.username===username?" (You)":"");
+      const seen=document.createElement("div");seen.className="memberSeen";seen.textContent=m.online?"Online now":"Last seen "+timeAgo(m.last_seen);
+      const dot=document.createElement("span");dot.className="dot"+(m.online?" isOnline":"");
+      info.append(name,seen);row.append(avatar,info,dot);list.append(row);
+    }
+    $("status").textContent=d.online_count>1?"Both chat members are online.":"You are online · waiting for the other user…";
+  }catch(_){}
+}
+function timeAgo(timestamp){
+  const seconds=Math.max(0,Math.floor(Date.now()/1000-timestamp));
+  if(seconds<10)return "just now";if(seconds<60)return seconds+" seconds ago";
+  const minutes=Math.floor(seconds/60);if(minutes<60)return minutes+" minute"+(minutes===1?"":"s")+" ago";
+  const hours=Math.floor(minutes/60);if(hours<24)return hours+" hour"+(hours===1?"":"s")+" ago";
+  const days=Math.floor(hours/24);return days+" day"+(days===1?"":"s")+" ago";
+}
+async function loadMessages(){
+  if(!joined)return;
+  try{
+    const r=await fetch("/api/messages?password="+encodeURIComponent(password),{cache:"no-store"});const d=await r.json();
+    if(!r.ok||!d.ok)return;
+    const signature=JSON.stringify(d.messages);if(signature===lastSignature)return;
+    const box=$("messages");
+    const oldMessages=Array.from(box.querySelectorAll(".msg")).map(el=>el.dataset.signature);
+    const newMessages=d.messages.filter(m=>!oldMessages.includes(JSON.stringify(m)));
+    for(const m of newMessages){
+      const row=document.createElement("div");row.className="msg"+(m.username===username?" mine":"");row.dataset.signature=JSON.stringify(m);
+      const meta=document.createElement("div");meta.className="meta";
+      const avatar=document.createElement("span");avatar.className="avatar";avatar.textContent=(m.username||"?").slice(0,1).toUpperCase();
+      const label=document.createElement("span");label.textContent=m.username+" · "+new Date(m.time*1000).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+      meta.append(avatar,label);
+      const bubble=document.createElement("div");bubble.className="bubble";bubble.textContent=m.message;
+      row.append(meta,bubble);box.append(row);
+    }
+    lastSignature=signature;box.scrollTop=box.scrollHeight;
+  }catch(_){}
+}
+$("sendForm").addEventListener("submit",async e=>{
+  e.preventDefault();const message=$("message").value.trim();if(!joined||!message)return;
+  try{
+    const r=await fetch("/api/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,password,message})});
+    const d=await r.json();if(!r.ok||!d.ok){$("status").textContent=d.error||"Message failed.";return}
+    $("message").value="";await loadMessages();
+  }catch(_){$("status").textContent="Could not send. Please retry."}
+});
+function leaveBeacon(){
+  if(!joined)return;
+  navigator.sendBeacon("/api/leave",new Blob([JSON.stringify({username,password,token})],{type:"application/json"}));
+}
+$("leaveBtn").addEventListener("click",async()=>{
+  if(joined){
+    try{await fetch("/api/leave",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,password,token})})}catch(_){}
+    addSystemMessage("👋 "+username+" left the chat");
+  }
+  joined=false;[pollTimer,presenceTimer,heartbeatTimer].forEach(t=>{if(t)clearInterval(t)});
+  window.removeEventListener("beforeunload",leaveBeacon);password="";location.reload();
+});
+function addSystemMessage(text){const line=document.createElement("div");line.className="system";line.textContent=text;$("messages").append(line);$("messages").scrollTop=$("messages").scrollHeight;}
+</script>
+</body>
+  </html>
